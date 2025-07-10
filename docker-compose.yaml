@@ -1,0 +1,9 @@
+
+services:
+  playwright-test:
+    image: playwright-tests
+    build: 
+      context: .
+      dockerfile: ./Dockerfile
+    working_dir: /playwright/demo-framework
+    command: npx playwright test 
