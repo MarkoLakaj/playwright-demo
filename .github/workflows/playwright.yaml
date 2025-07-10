@@ -1,0 +1,67 @@
+name: Playwright Tests
+on:
+  push:
+    branches: [ main, master ]
+    paths:
+      - 'demo-framework/**'     # Trigger on test changes
+      - 'pw-practice-app/**'    # Also trigger on app changes
+      - '.github/workflows/**'  # Trigger if workflow updates
+  pull_request:
+    branches: [ main, master ]
+    paths:
+      - 'demo-framework/**'
+      - 'pw-practice-app/**'
+
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout code
+      - uses: actions/checkout@v4
+
+      # Setup Node.js
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      # Install dependencies (from demo-framework)
+      - name: Install dependencies
+        working-directory: demo-framework
+        run: npm ci --force
+
+      # Install Playwright browsers
+      - name: Install Playwright Browsers
+        working-directory: demo-framework
+        run: npx playwright install --with-deps --force
+
+      # Start the Angular app (SUT) in Docker
+      - name: Start SUT container
+        run: docker-compose up -d sut
+
+      # Run Playwright tests against the SUT
+      - name: Run Playwright tests
+        working-directory: demo-framework
+        run: npx playwright test
+
+      # Upload Allure results as artifact (if not cancelled)
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: allure-results
+          path: demo-framework/allure-results/
+          retention-days: 30
+
+      # (Optional) Generate and upload Allure report
+      - name: Generate Allure report
+        if: ${{ !cancelled() }}
+        working-directory: demo-framework
+        run: |
+          npx allure generate allure-results --clean -o allure-report
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: allure-report
+          path: demo-framework/allure-report/
+          retention-days: 30
