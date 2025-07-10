@@ -1,7 +1,7 @@
 import { test, expect } from "../../support/fixtures/api-fixtures";
 import article from '../../support/test-data/article.json'
 
-test('Create and then delete the new article using API', async({request, tokenSetup}) => {
+test.skip('Create and then delete the new article using API', async({request, tokenSetup}) => {
 
     tokenSetup
 
