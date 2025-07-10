@@ -31,10 +31,12 @@ export default defineConfig({
   ],
 
   webServer: {
-    command: 'npm start',
-    cwd: '../pw-practice-app',  // Points to app directory
-    url: 'http://localhost:4200',
-    reuseExistingServer: !process.env.CI,
-    timeout: 120 * 1000
-  }
+  command: process.env.CI 
+    ? 'npm run start -- --port 4200 --host 0.0.0.0'
+    : 'npm start',
+  cwd: '../pw-practice-app',
+  url: 'http://localhost:4200',
+  reuseExistingServer: !process.env.CI,
+  timeout: 120 * 1000
+}
 });

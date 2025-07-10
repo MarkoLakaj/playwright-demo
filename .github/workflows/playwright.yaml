@@ -2,61 +2,37 @@ name: Playwright Tests
 on:
   push:
     branches: [main, master]
-    paths:
-      - 'demo-framework/**'
-      - 'pw-practice-app/**'
+
   pull_request:
     branches: [main, master]
-    paths:
-      - 'demo-framework/**'
-      - 'pw-practice-app/**'
 
 jobs:
   test:
-    runs-on: ubuntu-latest
     timeout-minutes: 60
+    runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout code
       - uses: actions/checkout@v4
-
-      # 2. Setup Docker 
-      - name: Verify Docker
-        run: |
-          docker --version
-          docker compose version  
-
-      # 3. Start containers
-      - name: Launch services
-        run: docker compose up -d --build
-
-      # 4. Setup Node
       - uses: actions/setup-node@v4
         with:
           node-version: lts/*
-
-      # 5. Install dependencies
+          
       - name: Install dependencies
         working-directory: demo-framework
-        run: npm ci --force
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps --force
+        run: |
+          npm install
+          npx playwright install --with-deps
 
-      # 6. Run tests
-      - name: Execute tests
+      - name: Install app dependencies
+        working-directory: pw-practice-app
+        run: npm install --force
+
+      - name: Run tests
         working-directory: demo-framework
         run: npx playwright test
-
-      # 7. Cleanup
-      - name: Stop containers
-        if: always()
-        run: docker compose down
-
-      # 8. Upload results
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: test-results
-          path: |
-            demo-framework/playwright-report/
-            demo-framework/test-results/
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
