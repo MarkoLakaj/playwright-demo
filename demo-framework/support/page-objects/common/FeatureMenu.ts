@@ -9,16 +9,16 @@ class FeatureMenu {
 
     /**
      * Method for navigating to a feature inside of a feature section. Checks if feature section is already expanded
-     * @param featureSection - this is a feature section
-     * @param featureName - this is a desired feature
+     * @param sectionTitle - this is a feature section title
+     * @param featureTitle - this is a desired feature title
      */
-    async navigateTo(featureSection: string, featureName: string) {
-        const featureSectionItem = this.page.getByTitle(featureSection)
-        const expandedState = await featureSectionItem.getAttribute('aria-expanded')
-        if (expandedState == 'false') {
+    async navigateTo(sectionTitle: string, featureTitle: string) {
+        const featureSectionItem = this.page.getByTitle(sectionTitle)
+        const isExpanded = await featureSectionItem.getAttribute('aria-expanded')
+        if (isExpanded === 'false') {
             await featureSectionItem.click()
         }
-        await this.page.getByTitle(featureName).click();
+        await this.page.getByTitle(featureTitle).click();
     }
 }
 

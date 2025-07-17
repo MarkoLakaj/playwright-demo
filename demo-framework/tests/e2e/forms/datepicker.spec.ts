@@ -1,4 +1,5 @@
 import { test, expect } from "../../../support/fixtures/general-fixtures";
+import Helper from "../../../support/utilities/Helper";
 
 
 test('select date and assert correct date has been selected', async({datePickerPage}) => {
@@ -8,24 +9,17 @@ test('select date and assert correct date has been selected', async({datePickerP
     let date = new Date()
 
     date.setDate(date.getDate() + daysInFuture)
-    // Define desired date
+    // Desired day number as string
     const desiredDate = date.getDate().toString()
-    // Define expected date day, month, year
-    const expectedDate = date.getDate().toString()
-    const expectedMonth = date.toLocaleString('En-US', {month: "short"})
-    const expectedYear = date.getFullYear().toString()
-    const expectedFullDate = `${expectedMonth} ${expectedDate}, ${expectedYear}`
+    const expectedFullDate = Helper.formatDateForInput(date)
     // Open the Common Datepicker 
     await datePickerPage.openCommonDatepicker()
-    // Define a calendar month and year for iteration logic
-    let calendarMonthAndYEar = await datePickerPage.getCalendarMonthAndDate()
-    // Define a calendar month and year that is expected
-    const expectedMonthLong = date.toLocaleString('En-US', {month: "long"})
-    const expectedCalendatMonthAndYear = ` ${expectedMonthLong} ${expectedYear} `
+    let calendarMonthAndYear = await datePickerPage.getCalendarMonthAndDate()
+    const expectedCalendarMonthAndYear = Helper.formatMonthYear(date)
     // Iterate through the calendar until the correct month / year is found
-    while(!calendarMonthAndYEar?.includes(expectedCalendatMonthAndYear)) {
+    while(!calendarMonthAndYear?.includes(expectedCalendarMonthAndYear)) {
         await datePickerPage.iterateThroughCalendar()
-        calendarMonthAndYEar = await datePickerPage.getCalendarMonthAndDate()
+        calendarMonthAndYear = await datePickerPage.getCalendarMonthAndDate()
     }
     // Select the desired date within the current month
     await datePickerPage.selectCurrentMonthDate(desiredDate)

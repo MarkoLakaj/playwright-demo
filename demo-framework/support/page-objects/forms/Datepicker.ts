@@ -1,4 +1,4 @@
-import { Locator, Page } from "@playwright/test";
+import { Page } from "@playwright/test";
 
 
 class Datepicker {
@@ -9,12 +9,12 @@ class Datepicker {
         this.page = page
     }
 
-    async openCommonDatepicker() {
+    async openCommonDatepicker(): Promise<void> {
         await this.page.getByPlaceholder('Form Picker').click()
     }
 
-    async selectCurrentMonthDate(date: string) {
-        await this.page.locator('[class="day-cell ng-star-inserted"]').getByText(date, {exact: true}).click()
+    async selectCurrentMonthDate(dayOfCurrentMonth: string): Promise<void> {
+        await this.page.locator('[class="day-cell ng-star-inserted"]').getByText(dayOfCurrentMonth, {exact: true}).click()
     }
 
     getCommonDatePicker() {
@@ -25,7 +25,7 @@ class Datepicker {
         return await this.page.locator('nb-calendar-view-mode').textContent()
     }
 
-    async iterateThroughCalendar() {
+    async iterateThroughCalendar(): Promise<void> {
         await this.page.locator('nb-calendar-pageable-navigation [data-name="chevron-right"]').click()
     }
 

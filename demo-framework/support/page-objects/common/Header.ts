@@ -8,15 +8,15 @@ class Header {
         this.page = page
     }
 
-    getHeaderLayout() {
+    getHeaderLayout(): Locator {
         return this.page.locator('nb-layout-header')
     }
 
-    async clickThemeDropdown() {
+    async clickThemeDropdown(): Promise<void> {
         await this.page.locator('ngx-header nb-select').click()
     }
 
-    async selectThemeDropdown(theme: string) {
+    async selectThemeDropdown(theme: string): Promise<void> {
         await this.page.locator('nb-option-list nb-option').filter({hasText: theme}).click()
     }
 

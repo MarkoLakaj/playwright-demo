@@ -10,7 +10,7 @@ import SmartTablePage from '../page-objects/tables_and_data/SmartTablePage';
 
 type Fixtures = {
     
-    beforeEach: void
+    basePageLoad: void
     smartTablePage: SmartTablePage
     popoverPage: PopoverPage
     formLayoutsPage: FormLayoutsPage
@@ -29,7 +29,7 @@ type Fixtures = {
  */
 export const test = base.extend<Fixtures>({
 
-    beforeEach: [
+    basePageLoad: [
     async ({ page }, use) => {
       // Navigate to the base URL from environment variables
       await page.goto(process.env.BASE_URL_FE as string);

@@ -1,6 +1,6 @@
 import { test, expect } from "../../support/fixtures/api-fixtures";
 
-test('mockLoadedArticlesOnHomepage', async({page, mockArticleTags}) => {
+test('should display mocked article tags on homepage', async({page, mockArticleTags}) => {
 
     // Mock the article tags 
     mockArticleTags

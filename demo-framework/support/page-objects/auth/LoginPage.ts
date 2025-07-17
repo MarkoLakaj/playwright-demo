@@ -8,30 +8,40 @@ class LoginPage {
         this.page = page
     }
 
-    async enterEmailAddress(emailAddress) {
+    get loginButton(): Locator {
+    return this.page.getByRole('button', { name: ' Log In ' });
+    }
+
+    async enterEmailAddress(emailAddress: string): Promise<void> {
         await this.page.locator('#input-email').fill(emailAddress)
     }
 
-    async clearEmailAddress() {
+    async clearEmailAddress(): Promise<void> {
         await this.page.locator('#input-email').clear()
     }
 
-    async getEmailValidationStatus() {
+    async getEmailValidationStatus(): Promise<string> {
         const status = await this.page.locator('#input-email').getAttribute('ng-reflect-status')
-        return status as string
+        return status ?? ""
     }
 
-    async enterPassword(password: string) {
+    async enterPassword(password: string): Promise<void> {
         await this.page.locator('#input-password').fill(password)
     }
 
-    async clearPassword() {
+    async clearPassword(): Promise<void> {
         await this.page.locator('#input-password').clear()
     }
 
-    async clickLoginButton() {
+    async clickLoginButton(): Promise<void> {
         await this.page.getByRole("button", {name: ' Log In '}).click({force: true})
     }
+
+    async loginWithCredentials(email: string, password: string): Promise<void> {
+    await this.enterEmailAddress(email);
+    await this.enterPassword(password);
+    await this.clickLoginButton();
+  }
 }
 
 export default LoginPage;
