@@ -14,12 +14,10 @@ export const test = base.extend<ApiFixtures> ({
 
     navigateToHomepage: [
         async({page}, use) => {
-            // Navigate to the example app homepage
             await page.goto(`${process.env.BASE_URL_BE}`)
             await use()
         },
-        
-            // Auto-execute before each test that uses this fixture
+      
         {
             auto: true
         }
@@ -27,7 +25,6 @@ export const test = base.extend<ApiFixtures> ({
 
     tokenSetup: 
         async ({ request }, use) => {
-            // Get access token
             const response = await request.post(process.env.ACCESS_TOKEN_BE as string, {
                 data: {
                     "user": {
@@ -42,11 +39,10 @@ export const test = base.extend<ApiFixtures> ({
             const responseBody = await response.json();
             process.env['ACCESS_TOKEN'] = responseBody.user.token;
             await use();
-        },  // Configuration object required for array syntax
+        }, 
 
     mockArticleTags: 
         async({page}, use) => {
-            //  Mock entity
             await page.route('*/**/api/tags', async route => {
                 await route.fulfill({
                     body: JSON.stringify(tags)
